@@ -8,17 +8,21 @@ defmodule Exlivery.Orders.Agent do
   end
 
   def save(%Order{} = order) do
-    Agent.update(__MODULE__, &update_state(&1, user))
+    uuid = UUID.uuid4()
+
+    Agent.update(__MODULE__, &update_state(&1, order, uuid))
+
+    {:ok, uuid}
   end
 
-  def get(cpf), do: Agent.get(__MODULE__, &get_user(&1, cpf))
+  def get(uuid), do: Agent.get(__MODULE__, &get_order(&1, uuid))
 
-  defp update_state(state, %User{cpf: cpf} = user), do: Map.put(state, cpf, user)
+  defp update_state(state, %Order{} = order, uuid), do: Map.put(state, uuid, order)
 
-  defp get_user(state, cpf) do
-    case Map.get(state, cpf) do
-      nil -> {:error, "User not found"}
-      user -> {:ok, user}
+  defp get_order(state, uuid) do
+    case Map.get(state, uuid) do
+      nil -> {:error, "Order not found"}
+      order -> {:ok, order}
     end
   end
 end
