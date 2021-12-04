@@ -1,8 +1,11 @@
 defmodule ExliveryTest.OrderTest do
+  # Injeta código de um módulo para o outro
   use ExUnit.Case
 
+  # Apenas para dar apelidos
   alias Exlivery.Orders.Order
 
+  # Trás as funções de um módulo para o outro
   import Exlivery.Factory
 
   describe "build/2" do
